@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Courier: Zero to First Contract</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2; --paper:#FFFFFF; --ink:#192A2D; --ink-soft:#4A5F62;
+  --teal:#1A5C6B; --teal-deep:#0F3A44; --gold:#C4974A; --gold-soft:#E8D2A4;
+  --line:rgba(26,92,107,.14); --line-strong:rgba(26,92,107,.28);
+  --shadow:0 1px 2px rgba(15,58,68,.06),0 8px 24px rgba(15,58,68,.07);
+  --shadow-lg:0 2px 4px rgba(15,58,68,.08),0 18px 50px rgba(15,58,68,.13);
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;line-height:1.08;letter-spacing:-.02em;font-weight:700}
+.mono{font-family:'JetBrains Mono',monospace}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ===== TOP NAV ===== */
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,247,242,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1080px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Bricolage Grotesque';font-weight:700;font-size:1.05rem;letter-spacing:-.02em}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:var(--teal-deep);display:grid;place-items:center;flex:none}
+.brand .mark svg{width:18px;height:18px}
+.nav-cta{background:var(--teal-deep);color:#fff;padding:10px 20px;border-radius:99px;font-weight:600;font-size:.9rem;transition:.2s;white-space:nowrap}
+.nav-cta:hover{background:var(--teal);transform:translateY(-1px)}
+
+/* ===== HERO ===== */
+.hero{position:relative;overflow:hidden;background:
+  radial-gradient(900px 500px at 88% -10%,rgba(196,151,74,.16),transparent 60%),
+  radial-gradient(700px 500px at 0% 110%,rgba(26,92,107,.12),transparent 55%);
+  border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding:74px 0 84px}
+.hero h1{font-size:clamp(2.5rem,5vw,3.9rem);font-weight:800}
+.hero h1 .accent{color:var(--teal);position:relative}
+.hero-sub{font-size:1.15rem;color:var(--ink-soft);margin:22px 0 30px;max-width:30em}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.badge{font-family:'JetBrains Mono';font-size:.74rem;font-weight:500;background:var(--paper);border:1px solid var(--line-strong);padding:7px 13px;border-radius:99px;display:flex;align-items:center;gap:7px}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn-primary{background:var(--gold);color:var(--teal-deep);padding:16px 30px;border-radius:99px;font-weight:700;font-size:1.02rem;box-shadow:0 6px 18px rgba(196,151,74,.35);transition:.2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(196,151,74,.45)}
+.hero-price{font-size:.92rem;color:var(--ink-soft)}
+.hero-price b{color:var(--ink);font-size:1.05rem}
+.enrolled-link{background:none;color:var(--teal);font-weight:600;font-size:.9rem;margin-top:18px;text-decoration:underline;text-underline-offset:3px;padding:0}
+.enrolled-link:hover{color:var(--teal-deep)}
+
+/* route card in hero */
+.route-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 26px 20px;box-shadow:var(--shadow-lg)}
+.route-card .rc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.rc-tag{font-family:'JetBrains Mono';font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.rc-live{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono';font-size:.72rem;color:var(--teal);font-weight:600}
+.rc-live .dot{width:8px;height:8px;border-radius:50%;background:#2bb673;box-shadow:0 0 0 0 rgba(43,182,115,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,182,115,.5)}70%{box-shadow:0 0 0 9px rgba(43,182,115,0)}100%{box-shadow:0 0 0 0 rgba(43,182,115,0)}}
+.rc-stop{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding:9px 0;position:relative}
+.rc-stop .pin{width:30px;height:30px;border-radius:50%;border:2px solid var(--line-strong);display:grid;place-items:center;background:var(--cream);z-index:2;font-family:'JetBrains Mono';font-size:.72rem;font-weight:600;color:var(--ink-soft)}
+.rc-stop.done .pin{background:var(--teal);border-color:var(--teal);color:#fff}
+.rc-stop.now .pin{background:var(--gold);border-color:var(--gold);color:var(--teal-deep)}
+.rc-stop:not(:last-child)::before{content:"";position:absolute;left:14px;top:30px;bottom:-9px;width:2px;background:var(--line-strong);z-index:1}
+.rc-stop.done:not(:last-child)::before{background:var(--teal)}
+.rc-stop .lbl{font-size:.92rem;font-weight:500}
+.rc-stop .meta{font-family:'JetBrains Mono';font-size:.7rem;color:var(--ink-soft)}
+
+/* ===== STAT STRIP ===== */
+.stats{border-bottom:1px solid var(--line);background:var(--teal-deep);color:#fff}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.stat{padding:34px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:'Bricolage Grotesque';font-size:2.2rem;font-weight:800;color:var(--gold-soft);letter-spacing:-.02em}
+.stat .l{font-size:.82rem;color:rgba(255,255,255,.72);margin-top:4px;letter-spacing:.01em}
+
+/* ===== SECTIONS ===== */
+section.block{padding:78px 0}
+.sec-head{max-width:38em;margin-bottom:44px}
+.sec-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:12px 0 14px}
+.sec-head p{color:var(--ink-soft);font-size:1.08rem}
+
+/* what you'll learn */
+.learn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.learn{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;gap:16px;transition:.2s}
+.learn:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:var(--line-strong)}
+.learn .ic{width:42px;height:42px;border-radius:11px;background:rgba(26,92,107,.09);display:grid;place-items:center;flex:none;color:var(--teal)}
+.learn .ic svg{width:22px;height:22px}
+.learn h4{font-size:1.05rem;margin-bottom:5px}
+.learn p{font-size:.92rem;color:var(--ink-soft)}
+
+/* curriculum */
+.curr{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.mod{border-bottom:1px solid var(--line)}
+.mod:last-child{border-bottom:none}
+.mod-head{width:100%;text-align:left;background:none;padding:22px 26px;display:flex;align-items:center;gap:18px;transition:.15s}
+.mod-head:hover{background:var(--cream)}
+.mod-num{font-family:'JetBrains Mono';font-size:.78rem;font-weight:600;color:#fff;background:var(--teal);width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
+.mod-meta{flex:1}
+.mod-meta h4{font-size:1.12rem}
+.mod-meta .c{font-size:.82rem;color:var(--ink-soft);font-family:'JetBrains Mono';margin-top:2px}
+.chev{transition:.25s;color:var(--ink-soft);flex:none}
+.mod.open .chev{transform:rotate(180deg)}
+.mod-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.lec{display:flex;align-items:center;gap:14px;padding:13px 26px 13px 78px;border-top:1px solid var(--line);font-size:.94rem}
+.lec .ld{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;display:grid;place-items:center}
+.lec .ld svg{width:11px;height:11px;color:var(--teal)}
+.lec.new::after{content:"NEW";font-family:'JetBrains Mono';font-size:.62rem;font-weight:600;color:var(--gold);border:1px solid var(--gold-soft);padding:2px 6px;border-radius:5px;margin-left:auto}
+
+/* instructor / value */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:stretch}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:34px;box-shadow:var(--shadow)}
+.panel.dark{background:var(--teal-deep);color:#fff;border-color:transparent}
+.panel.dark .eyebrow{color:var(--gold-soft)}
+.panel h3{font-size:1.5rem;margin:10px 0 14px}
+.panel p{color:var(--ink-soft);font-size:.98rem;margin-bottom:12px}
+.panel.dark p{color:rgba(255,255,255,.82)}
+.vlist{list-style:none;margin-top:8px}
+.vlist li{display:flex;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,.12);font-size:.96rem;align-items:flex-start}
+.vlist li:first-child{border-top:none}
+.vlist .ck{color:var(--gold-soft);flex:none;margin-top:3px}
+
+/* pricing */
+.price-wrap{display:grid;place-items:center;padding:8px 0 0}
+.price-card{background:var(--paper);border:1.5px solid var(--gold-soft);border-radius:22px;padding:40px;max-width:440px;width:100%;text-align:center;box-shadow:var(--shadow-lg);position:relative}
+.price-card .ribbon{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--teal-deep);font-family:'JetBrains Mono';font-size:.72rem;font-weight:600;letter-spacing:.08em;padding:6px 16px;border-radius:99px}
+.price-card .amt{font-family:'Bricolage Grotesque';font-size:3.4rem;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin:14px 0 2px}
+.price-card .amt small{font-size:1.1rem;color:var(--ink-soft);font-weight:500}
+.price-card .plist{list-style:none;text-align:left;margin:22px 0 26px}
+.price-card .plist li{display:flex;gap:11px;padding:8px 0;font-size:.95rem}
+.price-card .plist .ck{color:var(--teal);flex:none}
+.price-card .btn-primary{width:100%;display:block;text-align:center}
+
+/* footer */
+footer{background:var(--teal-deep);color:rgba(255,255,255,.7);padding:48px 0;font-size:.88rem}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot-inner .brand{color:#fff}
+
+/* ===== COURSE PLAYER ===== */
+.player{display:none;min-height:100vh}
+.player.active{display:grid;grid-template-columns:330px 1fr}
+.p-side{background:var(--teal-deep);color:#fff;padding:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.p-side::-webkit-scrollbar{width:7px}.p-side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
+.p-side-head{padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.12);position:sticky;top:0;background:var(--teal-deep);z-index:5}
+.back-link{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:.74rem;color:rgba(255,255,255,.6);margin-bottom:16px;background:none;letter-spacing:.05em}
+.back-link:hover{color:#fff}
+.p-side-head h3{font-size:1.15rem;color:#fff}
+.prog-bar{height:7px;background:rgba(255,255,255,.14);border-radius:99px;margin-top:14px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));width:0;transition:width .4s ease;border-radius:99px}
+.prog-txt{font-family:'JetBrains Mono';font-size:.72rem;color:rgba(255,255,255,.6);margin-top:8px}
+.p-route{padding:14px 24px 40px}
+.p-mod{margin-top:18px}
+.p-mod-t{font-family:'JetBrains Mono';font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-soft);font-weight:600;padding:0 0 6px 30px}
+.p-lec{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:flex-start;padding:9px 8px 9px 6px;border-radius:9px;cursor:pointer;position:relative;transition:.15s;background:none;width:100%;text-align:left;color:rgba(255,255,255,.8)}
+.p-lec:hover{background:rgba(255,255,255,.07)}
+.p-lec.active{background:rgba(255,255,255,.12)}
+.p-lec .stopdot{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:grid;place-items:center;z-index:2;flex:none;margin-top:1px}
+.p-lec .stopdot svg{width:11px;height:11px}
+.p-lec.done .stopdot{background:var(--gold);border-color:var(--gold);color:var(--teal-deep)}
+.p-lec.active .stopdot{border-color:var(--gold-soft);box-shadow:0 0 0 4px rgba(232,210,164,.18)}
+.p-lec:not(:last-child)::before{content:"";position:absolute;left:16px;top:30px;height:calc(100% - 8px);width:2px;background:rgba(255,255,255,.14);z-index:1}
+.p-lec.done:not(:last-child)::before{background:var(--gold)}
+.p-lec .lectxt{font-size:.9rem;line-height:1.4;font-weight:500;padding-top:2px}
+.p-lec .lecnum{font-family:'JetBrains Mono';font-size:.68rem;color:rgba(255,255,255,.45);display:block}
+
+.p-main{padding:0;background:var(--cream);min-height:100vh}
+.p-main-inner{max-width:760px;margin:0 auto;padding:44px 40px 90px}
+.lesson-eyebrow{font-family:'JetBrains Mono';font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:12px}
+.lesson-body h1{font-size:clamp(1.8rem,3.2vw,2.4rem);margin-bottom:8px}
+.lesson-body h3{font-size:1.32rem;margin:34px 0 12px;color:var(--teal-deep)}
+.lesson-body h4{font-size:1.06rem;margin:24px 0 8px}
+.lesson-body p{margin:13px 0;color:#2c3d40}
+.lesson-body ul,.lesson-body ol{margin:13px 0 13px 4px;padding-left:22px}
+.lesson-body li{margin:7px 0;color:#2c3d40}
+.lesson-body strong{color:var(--ink);font-weight:600}
+.lesson-body a{color:var(--teal);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.lesson-body hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.callout{border-left:3px solid var(--gold);background:rgba(196,151,74,.08);padding:16px 20px;border-radius:0 12px 12px 0;margin:20px 0}
+.callout.warn{border-color:#c2562e;background:rgba(194,86,46,.07)}
+.callout.warn strong{color:#a8431f}
+.callout p{margin:6px 0}
+.callout .ctag{font-family:'JetBrains Mono';font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:4px;display:block}
+.callout.warn .ctag{color:#a8431f}
+.script{background:var(--teal-deep);color:#e8f0f1;border-radius:12px;padding:20px 22px;margin:18px 0;font-size:.95rem;line-height:1.65}
+.script .stag{font-family:'JetBrains Mono';font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);font-weight:600;margin-bottom:8px;display:block}
+.script em{color:var(--gold-soft);font-style:normal}
+.dl-btn{display:inline-flex;align-items:center;gap:11px;background:var(--teal-deep);color:#fff;padding:15px 22px;border-radius:12px;font-weight:600;font-size:.96rem;text-decoration:none;margin:20px 0 6px;transition:.18s;box-shadow:0 4px 14px rgba(15,58,68,.16)}
+.dl-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,58,68,.24);text-decoration:none}
+.dl-btn .dlic{width:34px;height:34px;border-radius:9px;background:var(--gold);display:grid;place-items:center;flex:none}
+.dl-btn .dlic svg{width:18px;height:18px;color:var(--teal-deep)}
+.dl-btn small{display:block;font-weight:400;font-size:.78rem;color:var(--gold-soft);margin-top:1px}
+.checkitem{display:flex;gap:11px;padding:8px 0;align-items:flex-start}
+.checkitem .cb{width:18px;height:18px;border:1.5px solid var(--teal);border-radius:5px;flex:none;margin-top:3px}
+.lesson-nav{display:flex;justify-content:space-between;gap:14px;margin-top:46px;padding-top:26px;border-top:1px solid var(--line)}
+.lnav-btn{background:var(--paper);border:1px solid var(--line-strong);padding:14px 22px;border-radius:12px;font-weight:600;font-size:.94rem;transition:.15s;display:flex;align-items:center;gap:9px;color:var(--ink)}
+.lnav-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.lnav-btn:disabled{opacity:.4;cursor:not-allowed}
+.lnav-btn.next{background:var(--teal-deep);color:#fff;border-color:transparent;margin-left:auto}
+.lnav-btn.next:hover{background:var(--teal);color:#fff;transform:translateY(-1px)}
+.complete-btn{background:var(--gold);color:var(--teal-deep);padding:13px 24px;border-radius:12px;font-weight:700;font-size:.94rem;display:flex;align-items:center;gap:9px;transition:.15s}
+.complete-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(196,151,74,.3)}
+.complete-btn.is-done{background:rgba(26,92,107,.1);color:var(--teal)}
+.mobile-menu-btn{display:none}
+
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr;gap:36px;padding:48px 0 56px}
+  .route-card{max-width:440px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:none}
+  .learn-grid,.split{grid-template-columns:1fr}
+  .player.active{grid-template-columns:1fr}
+  .p-side{position:fixed;left:-100%;width:300px;z-index:100;transition:left .3s;box-shadow:var(--shadow-lg)}
+  .p-side.open{left:0}
+  .mobile-menu-btn{display:flex;align-items:center;gap:8px;position:fixed;top:14px;left:14px;z-index:60;background:var(--teal-deep);color:#fff;padding:10px 16px;border-radius:99px;font-weight:600;font-size:.85rem;box-shadow:var(--shadow)}
+  .p-main-inner{padding:64px 22px 80px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING PAGE ============ -->
+<div id="landing">
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#E8D2A4" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l2-3 3 6 2-3h4"/><circle cx="12" cy="12" r="9"/></svg></span>
+        Medical Courier Pro
+      </div>
+      <a class="nav-cta" href="https://stan.store/rickdigitalboss" target="_blank" rel="noopener">Enroll now</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow" style="margin-bottom:14px">Healthcare Logistics · Business Course</div>
+          <h1>Start a <span class="accent">medical courier</span> business — from zero to your first contract.</h1>
+          <p class="hero-sub">A complete, step-by-step system: form your LLC, get certified, line up insurance, and land paying healthcare contracts. Built for people who want a real business under $1,000 in startup cost.</p>
+          <div class="badges">
+            <span class="badge">7 modules · 22 lessons</span>
+            <span class="badge">Self-paced</span>
+            <span class="badge">Templates included</span>
+          </div>
+          <div class="hero-actions">
+            <a class="btn-primary" href="https://stan.store/rickdigitalboss" target="_blank" rel="noopener">Enroll &amp; begin</a>
+            <div class="hero-price"><s style="color:var(--ink-soft);font-weight:400">$97</s> <b>$27</b> one-time · lifetime access</div>
+          </div>
+          <button class="enrolled-link" onclick="openCourse(0)">Already enrolled? Start the course →</button>
+        </div>
+        <div class="route-card">
+          <div class="rc-top">
+            <span class="rc-tag">Your route to launch</span>
+            <span class="rc-live"><span class="dot"></span>30 days</span>
+          </div>
+          <div class="rc-stop done"><span class="pin">✓</span><span class="lbl">Form your LLC + EIN</span><span class="meta">wk 1</span></div>
+          <div class="rc-stop done"><span class="pin">✓</span><span class="lbl">Get certified (HIPAA/BBP)</span><span class="meta">wk 1</span></div>
+          <div class="rc-stop now"><span class="pin">3</span><span class="lbl">Insure &amp; equip</span><span class="meta">wk 2</span></div>
+          <div class="rc-stop"><span class="pin">4</span><span class="lbl">Apply to courier networks</span><span class="meta">wk 3</span></div>
+          <div class="rc-stop"><span class="pin">5</span><span class="lbl">First paid contract</span><span class="meta">wk 4</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat"><div class="n">~$500</div><div class="l">Documented startup cost</div></div>
+        <div class="stat"><div class="n">$31B</div><div class="l">Healthcare delivery market</div></div>
+        <div class="stat"><div class="n">30 days</div><div class="l">Plan to first contract</div></div>
+        <div class="stat"><div class="n">15+</div><div class="l">Companies hiring couriers</div></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">What you'll be able to do</div>
+        <h2>Everything to launch — nothing you don't need.</h2>
+        <p>This isn't background reading. Each module ends with an action that moves you toward a paying contract.</p>
+      </div>
+      <div class="learn-grid">
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg></span><div><h4>Form a legal business</h4><p>File your LLC, get your EIN free, open a business account — with real state-by-state fees and scam warnings.</p></div></div>
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><h4>Get the right certifications</h4><p>HIPAA, OSHA Bloodborne Pathogens, specimen handling — exactly where to get them and what they cost.</p></div></div>
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><h4>Insure it properly</h4><p>The commercial-auto trap that bankrupts new couriers — and the exact coverage clients require.</p></div></div>
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2-3 3 6 2-3h4"/><circle cx="12" cy="12" r="9"/></svg></span><div><h4>Handle specimens like a pro</h4><p>Temperature categories, triple-packaging, chain of custody — the skills that earn premium rates.</p></div></div>
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0 .01M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div><h4>Land paying contracts</h4><p>A directory of 15+ companies that hire couriers, plus word-for-word cold-call and email scripts.</p></div></div>
+        <div class="learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg></span><div><h4>Price &amp; scale</h4><p>Per-stop, per-mile, and STAT pricing models — then how to add drivers and build something sellable.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">The curriculum</div>
+        <h2>7 modules. A clear path from idea to income.</h2>
+      </div>
+      <div class="curr" id="currList"></div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:0">
+    <div class="wrap">
+      <div class="split">
+        <div class="panel">
+          <div class="eyebrow">Who this is for</div>
+          <h3>Built for the rebuild.</h3>
+          <p>Whether you're starting over, working a second income, or done trading hours for someone else's dream — this is a business you can start with a clean driving record, a reliable car, and under $1,000.</p>
+          <p>Many medical courier opportunities are accessible with a background, depending on the offense and the company. The answer is no 100% of the time you don't ask — so this course shows you exactly where and how to apply.</p>
+        </div>
+        <div class="panel dark">
+          <div class="eyebrow">What's included</div>
+          <h3 style="color:#fff">More than lessons.</h3>
+          <ul class="vlist">
+            <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>22 action-driven lessons across 7 modules</li>
+            <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>Directory of 15+ companies hiring couriers</li>
+            <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>Cold-call &amp; email scripts that win contracts</li>
+            <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>Startup budget &amp; pricing worksheets</li>
+            <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>A complete 30-day launch plan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:0">
+    <div class="wrap price-wrap">
+      <div class="price-card">
+        <span class="ribbon">LIFETIME ACCESS</span>
+        <div class="eyebrow" style="margin-top:8px">Full program</div>
+        <div class="amt"><s style="font-size:1.6rem;color:var(--ink-soft);font-weight:500">$97</s> <small>$</small>27</div>
+        <div style="color:var(--ink-soft);font-size:.9rem">One-time payment · yours forever</div>
+        <ul class="plist">
+          <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>All 7 modules &amp; 22 lessons</li>
+          <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>6 downloadable workbooks &amp; templates</li>
+          <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>Contract company directory + scripts</li>
+          <li><span class="ck"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>Free lifetime updates</li>
+        </ul>
+        <a class="btn-primary" href="https://stan.store/rickdigitalboss" target="_blank" rel="noopener" style="display:block;text-decoration:none">Get instant access — $27</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#E8D2A4" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l2-3 3 6 2-3h4"/><circle cx="12" cy="12" r="9"/></svg></span>Medical Courier Pro</div>
+      <div>© 2026 · Education only — not legal, tax, or insurance advice. Verify current requirements with your state and clients.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============ COURSE PLAYER ============ -->
+<button class="mobile-menu-btn" id="menuBtn" onclick="toggleSide()" style="display:none">☰ Lessons</button>
+<div class="player" id="player">
+  <aside class="p-side" id="pSide">
+    <div class="p-side-head">
+      <button class="back-link" onclick="closeCourse()">← Back to course home</button>
+      <h3>Medical Courier Pro</h3>
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-txt" id="progTxt">0% complete</div>
+    </div>
+    <div class="p-route" id="pRoute"></div>
+  </aside>
+  <main class="p-main">
+    <div class="p-main-inner">
+      <div class="lesson-eyebrow" id="lessonEyebrow"></div>
+      <div class="lesson-body" id="lessonBody"></div>
+      <div class="lesson-nav">
+        <button class="lnav-btn prev" id="prevBtn" onclick="go(-1)">← Previous</button>
+        <button class="complete-btn" id="completeBtn" onclick="toggleComplete()"></button>
+        <button class="lnav-btn next" id="nextBtn" onclick="go(1)">Next →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============ COURSE DATA ============ */
+const CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+const MODULES = [
+  { t:"Introduction", lessons:[
+    { n:"1.1", title:"What a medical courier actually does (and earns)", html:`
+<h1>What a medical courier actually does</h1>
+<p>A medical courier transports time-sensitive healthcare materials between facilities: lab specimens (blood, urine, tissue), prescription medications, medical records, surgical instruments, imaging, and equipment. This is <strong>not</strong> DoorDash with a cooler.</p>
+<h3>Why it's different</h3>
+<ul>
+<li><strong>Your cargo affects patient care.</strong> A late blood sample means a re-draw or delayed diagnosis. Labs pay a premium because mistakes cost them far more than your fee.</li>
+<li><strong>You handle protected health information.</strong> Under HIPAA you're a "business associate" of the facilities you serve — with legal obligations.</li>
+<li><strong>Some cargo is biohazardous.</strong> Blood and fluid specimens require OSHA Bloodborne Pathogens training to handle legally.</li>
+</ul>
+<h3>The four kinds of work</h3>
+<ol>
+<li><strong>Routed work</strong> — scheduled daily routes. Predictable, recurring revenue. The bread and butter.</li>
+<li><strong>STAT deliveries</strong> — urgent on-demand runs. Highest pay per run.</li>
+<li><strong>Pharmacy / home delivery</strong> — prescriptions to patients, including refrigerated meds. Fast-growing.</li>
+<li><strong>Scheduled non-specimen</strong> — records, supplies, equipment between facilities.</li>
+</ol>
+<h3>Realistic earnings (solo, your own vehicle)</h3>
+<ul>
+<li>Part-time (one daily route): ~$1,500–$3,000/month</li>
+<li>Full-time (routes + STAT): ~$3,000–$6,000/month gross</li>
+<li>Multi-driver (you + 2–3 contractors): $10,000+/month gross is achievable</li>
+</ul>
+<p>These are gross — fuel, insurance, and vehicle wear come out. We build your real cost model in Module 2.</p>
+<div class="callout"><span class="ctag">Minimum to play</span><p>21+ years old · valid license + clean record · reliable insured vehicle · smartphone · ability to pass a background check. Have those four? The rest of this course handles the certifications, the legal entity, the insurance, and your first contract.</p></div>` },
+    { n:"1.2", title:"The industry: who pays you and why demand is growing", html:`
+<h1>Who pays you, and why demand keeps rising</h1>
+<p>Understand the players — they're your future clients.</p>
+<h3>Who hires medical couriers</h3>
+<ul>
+<li><strong>Reference labs</strong> (Labcorp, Quest, regional labs) — the biggest source of routed work.</li>
+<li><strong>Hospitals &amp; systems</strong> — inter-facility transfers, blood bank runs, STAT work.</li>
+<li><strong>Clinics &amp; physician offices</strong> — specimen pickups, records.</li>
+<li><strong>Pharmacies</strong> (retail, specialty, long-term-care) — prescription delivery. Specialty/cold-chain is a growth engine.</li>
+<li><strong>Imaging centers, dialysis, surgery centers, dental labs, vet labs</strong> — frequently overlooked, less competition.</li>
+<li><strong>National courier networks</strong> (Dropoff, USPack, American Expediting, Lab Logistics) — they hold the big contracts and subcontract to independents like you. Full directory in Module 4.</li>
+</ul>
+<h3>Why demand grows</h3>
+<ul>
+<li>Healthcare is decentralizing — more clinics and urgent cares to connect.</li>
+<li>Home healthcare means more deliveries to residences.</li>
+<li>Specialty pharmacy &amp; cold-chain meds (insulin, weight-loss injectables, biologics) are exploding.</li>
+<li>Labs consolidate — specimens travel farther, more often.</li>
+</ul>
+<h3>The two business models (you'll do both)</h3>
+<ol>
+<li><strong>Subcontractor</strong> — sign on as a 1099 with a national network. Lower pay per stop, zero sales effort, earning in 2–4 weeks.</li>
+<li><strong>Direct contract</strong> — land your own contracts with local labs and clinics. Higher margins, recurring revenue you own, a sellable asset — but it takes sales work (scripts in Module 4).</li>
+</ol>
+<div class="callout"><span class="ctag">The smart play</span><p>Start as a subcontractor for cash flow, build direct contracts on the side, and shift your mix toward direct work over 6–12 months.</p></div>` },
+    { n:"1.3", title:"Why start a business instead of taking a job", html:`
+<h1>Business vs. job</h1>
+<p>You can be a W-2 courier employee. So why build a business?</p>
+<h3>Employee (W-2)</h3>
+<ul><li>~$15–$22/hour</li><li>Sometimes a company vehicle</li><li>No control over routes or growth</li><li>Income capped at hours worked</li></ul>
+<h3>Independent business</h3>
+<ul><li>You set or negotiate rates: per-stop, per-mile, or monthly contracts</li><li>Stack multiple contracts</li><li>Hire drivers and earn off their routes — escape trading hours for dollars</li><li>Vehicle, mileage, phone, insurance become deductions</li><li>You're building a sellable asset</li></ul>
+<h3>The honest downsides</h3>
+<ul><li>Self-employment tax (~15.3%). Set aside 25–30% of gross from day one.</li><li>You cover your own insurance.</li><li>No work, no pay — routed contracts smooth this out.</li><li>You're 100% responsible for compliance.</li></ul>
+<div class="callout"><span class="ctag">Who this fits</span><p>Reliable, punctual people — the industry fires flaky drivers fast and rewards dependable ones with more routes. Many opportunities are accessible with a record, depending on the offense and company. Apply anyway; the answer is no 100% of the time you don't ask.</p></div>
+<h4>Action step</h4>
+<p>Write your 90-day goal now: (a) part-time income, (b) full-time replacement, or (c) multi-driver operation. It determines how aggressive you get in Modules 4 and 6.</p>` },
+  ]},
+  { t:"Getting Started — Legal, LLC, Insurance, Certs", lessons:[
+    { n:"2.1", title:"Legal requirements & certifications: the full checklist", html:`
+<h1>The certification stack</h1>
+<p>There's no single "medical courier license." You assemble a stack. Here's each piece, the cost, and where to get it.</p>
+<h3>1. HIPAA training (required)</h3>
+<p>You handle protected health information, so clients require proof of HIPAA training and will have you sign a Business Associate Agreement.</p>
+<ul><li><a href="https://hipaatraining.net/online-medical-courier-certification-training-package" target="_blank">HIPAATraining.net</a> — Medical Courier package (~$90) bundles HIPAA, OSHA BBP, HazCom, DOT basics</li><li>HIPAAExams.com — individual HIPAA (~$25–$30)</li><li><a href="https://www.a4dd.org" target="_blank">A4DD</a> — members get HIPAA &amp; BBP under $15 each</li></ul>
+<h3>2. OSHA Bloodborne Pathogens (required for specimen work — renew yearly)</h3>
+<p>OSHA 29 CFR 1910.1030 requires BBP training for anyone exposed to blood/infectious materials. Labs won't onboard you without it. Cost ~$15–$60.</p>
+<ul><li>HIPAAExams.com, BloodborneCertification.com, National Safety Council</li><li><a href="https://integritydelivers.com/online-courses/" target="_blank">Integrity Medical Courier Training</a> — courier-specific, covers BBP + HIPAA + specimen handling together</li></ul>
+<h3>3. Specimen handling / chain of custody (strongly recommended)</h3>
+<p>Not legally mandated, but it's what separates pros from gig drivers to a lab manager. Integrity's course is the industry standard.</p>
+<h3>4. DOT / Hazmat — when it applies</h3>
+<ul><li>Normal car/SUV under 10,001 lbs, local: you generally do NOT need a DOT number or CDL</li><li>Category B specimens (UN 3373): basic packaging/labeling training — covered in courier packages above</li><li>Dry ice (frozen specimens) is regulated — your training should cover it</li></ul>
+<div class="callout"><span class="ctag">Budget shopping list</span><p>Join A4DD (~$50–$70/yr, includes job board) → HIPAA + BBP under $15 each. OR one-stop: HIPAATraining.net courier package ~$90. <strong>Total: roughly $50–$150, done online in one weekend.</strong></p></div>
+<div class="callout warn"><span class="ctag">Disclaimer</span><p>Requirements vary by state and client. This is education, not legal advice. Always confirm current requirements with the client and your state.</p></div>` },
+    { n:"2.2", title:"Forming your LLC, EIN, and bank account", isNew:true, html:`
+<h1>From "no business" to "fully legal" in under a week</h1>
+<p>The filing itself takes about 20 minutes. Here's the whole path.</p>
+<h3>Why an LLC</h3>
+<p>You're transporting biohazardous materials in a vehicle. If something goes wrong, an LLC separates your business liability from your personal assets — your home, your savings. A sole proprietorship does not. For this industry, form the LLC.</p>
+<h3>Step 1 — Pick a name</h3>
+<ul><li>Search your state's Secretary of State site for availability</li><li>Avoid "hospital," "pharmacy," "clinic" (restricted in many states)</li><li>Good pattern: "[Name] Medical Logistics LLC," "[City] STAT Courier LLC"</li></ul>
+<h3>Step 2 — File Articles of Organization with your state</h3>
+<p>File directly on the state's <strong>.gov</strong> site — you don't need LegalZoom. Google "[your state] Secretary of State LLC filing."</p>
+<ul><li>Kentucky: $40 · Ohio: $99 · West Virginia: $100 (+~$30/yr report)</li><li>Most states $50–$200</li></ul>
+<p>You'll need: business name, your address as organizer, a registered agent (you can be your own, free in most states), and purpose ("courier and logistics services").</p>
+<h3>Step 3 — Get your EIN — FREE</h3>
+<p>Go to <a href="https://www.irs.gov" target="_blank">IRS.gov</a> → "Apply for an EIN online." Free, 10 minutes, immediate.</p>
+<div class="callout warn"><span class="ctag">Scam warning</span><p>Lookalike sites charge $75–$300 to "file your EIN." If a site asks for payment for an EIN, it is <strong>not</strong> the IRS. Only use IRS.gov.</p></div>
+<h3>Step 4 — Business bank account</h3>
+<p>Take your LLC approval + EIN letter to a bank or open online (Novo, Bluevine, Found, Relay, or a local credit union). Never run business income through your personal account.</p>
+<h3>Step 5 — Local licenses &amp; annual upkeep</h3>
+<ul><li>Some cities require a business license ($25–$100)</li><li>Most states require an annual report ($0–$100/yr) to stay active — calendar it</li></ul>
+<h3>Step 6 — Tax setup (do it now)</h3>
+<ul><li>Separate savings account; move 25–30% of every payment in for taxes</li><li>Track every mile from day one (MileIQ, Everlance, or a Google Sheet) — a full-timer deducts $15K–$25K+/yr in mileage</li><li>File quarterly estimates (Form 1040-ES) once earning steadily</li><li>Past ~$50–80K/yr, ask a CPA about an S-Corp election</li></ul>
+<div class="callout"><span class="ctag">Total cost</span><p>$40–$250 depending on your state. One week, fully legal. (This is education, not legal or tax advice.)</p></div>` },
+    { n:"2.3", title:"Insurance: the mistake that bankrupts new couriers", isNew:true, html:`
+<h1>The most expensive lesson in the industry</h1>
+<p>Read this twice. Most "start a courier business" content skips it entirely.</p>
+<div class="callout warn"><span class="ctag">The trap</span><p>Your personal auto policy almost certainly <strong>excludes commercial delivery use</strong>. Crash while transporting specimens for pay and the insurer can deny the entire claim — vehicle, the other party's damages, medical bills, destroyed cargo, all on you. This single mistake has ended more new courier businesses than anything else.</p></div>
+<h3>What you actually need</h3>
+<h4>1. Commercial auto insurance (non-negotiable)</h4>
+<ul><li>Policy class: "courier/delivery use" — say those words to the agent</li><li>Solo courier in a personal-type vehicle: ~$150–$350/month</li><li>Shop: Progressive Commercial, Geico Commercial, biBERK, Next, or an independent commercial agent</li><li>Ask about a "business use" endorsement on a personal policy — get in writing that medical courier deliveries are covered</li></ul>
+<h4>2. General liability ($1M per occurrence)</h4>
+<p>Most labs and networks require a Certificate of Insurance showing $1M before onboarding. ~$30–$60/month (Next, Hiscox, Thimble, biBERK).</p>
+<h4>3. Cargo insurance</h4>
+<p>Covers the specimens/medications themselves; $10K–$25K is a common contract requirement.</p>
+<h4>4. Workers' comp</h4>
+<p>Not needed solo in most states; required once you hire employees. 1099 rules vary — verify before hiring.</p>
+<div class="callout"><span class="ctag">Monthly fixed-cost stack (solo)</span><p>Commercial auto $150–$350 + general liability $30–$60 + phone/apps ~$20 = roughly <strong>$200–$430/month before you drive a mile.</strong> One small daily route covers it.</p></div>
+<h4>Pro moves</h4>
+<ul><li>Get quotes BEFORE you quit or sign — it's your biggest fixed cost</li><li>Ask each client their minimums, then buy exactly that — don't over-buy early</li><li>Your insurer issues COIs naming the client as certificate holder — free, takes a day</li></ul>` },
+    { n:"2.4", title:"Your business plan on one page", html:`
+<h1>One page, real numbers</h1><a class="dl-btn" href="downloads/02_Startup-Budget-Worksheet.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: Startup Budget Worksheet<small>Printable PDF workbook · yours to keep</small></span></a>
+<p>Forget the 30-page plan. Answer five questions — fill this in as you go.</p>
+<h3>1. Service mix</h3>
+<div class="checkitem"><span class="cb"></span><span>Subcontract routes (fastest to revenue)</span></div>
+<div class="checkitem"><span class="cb"></span><span>Direct lab/clinic contracts</span></div>
+<div class="checkitem"><span class="cb"></span><span>Pharmacy delivery</span></div>
+<div class="checkitem"><span class="cb"></span><span>STAT / on-demand</span></div>
+<h3>2. Startup budget</h3>
+<ul><li>LLC filing: $40–$200</li><li>EIN: $0</li><li>Certifications: $50–$150</li><li>Insurance (first month + deposit): $200–$500</li><li>Supplies (Module 3): $150–$300</li><li>Cards/branding: $0–$50</li></ul>
+<p><strong>Total realistic range: $450–$1,200</strong> (documented real example: ~$500).</p>
+<h3>3. Break-even math (know it cold)</h3>
+<p>Break-even = monthly fixed costs ÷ (revenue per route day − miles × cost per mile).</p>
+<div class="callout"><span class="ctag">Example</span><p>$300 fixed costs · a route paying $130/day with 90 miles ($40 vehicle cost) nets $90/day → you cover fixed costs in under 4 route days/month. Everything after is profit before taxes.</p></div>
+<h3>4. 90-day revenue target</h3>
+<p>Be specific: "one routed contract + 2 STAT runs/week" beats "make money."</p>
+<h3>5. Your unfair advantage</h3>
+<p>One sentence on why you over the next driver (reliability story, healthcare background, 24/7 availability, cold-chain, bilingual, veteran-owned). You'll use it verbatim in your outreach scripts.</p>` },
+    { n:"2.5", title:"Marketing: how couriers actually get found", html:`
+<h1>How couriers actually get found</h1>
+<p>It's NOT social media ads — lab managers don't hire couriers off TikTok. Ranked by ROI:</p>
+<h3>Tier 1 — Direct outreach ($0, highest ROI)</h3>
+<p>Full scripts in Module 4. The decision-makers are lab, practice, and pharmacy managers — most have a courier horror story. Your pitch is reliability, not price.</p>
+<h3>Tier 2 — Be findable when they're desperate</h3>
+<ul><li><strong>Google Business Profile</strong> (free, 30 min) — when a courier no-shows at 4 PM, someone Googles "medical courier near me." Be the result.</li><li><strong>One-page website</strong> ($0–$150/yr) — services, coverage area, certifications by name, insurance limits, phone big at top. Carrd, Google Sites, or GitHub Pages.</li><li><strong>LinkedIn</strong> as "Medical Courier | [Region]" — lab and logistics managers use it.</li></ul>
+<h3>Tier 3 — Network infrastructure</h3>
+<ul><li>Register with every courier network in the Module 4 directory</li><li>A4DD job board</li><li>Hospital vendor portals — tedious paperwork 90% of competitors never finish. Finish it.</li></ul>
+<div class="callout"><span class="ctag">Skip these</span><p>Paid ads, content marketing, expensive logos. Healthcare buys on trust, certifications, insurance, and answered phone calls — not aesthetics.</p></div>
+<h4>One-week marketing sprint</h4>
+<div class="checkitem"><span class="cb"></span><span>Google Business Profile live</span></div>
+<div class="checkitem"><span class="cb"></span><span>One-page site with certifications + COI mention</span></div>
+<div class="checkitem"><span class="cb"></span><span>LinkedIn updated</span></div>
+<div class="checkitem"><span class="cb"></span><span>20-prospect list built (Module 4)</span></div>` },
+  ]},
+  { t:"Equipment & Tools", lessons:[
+    { n:"3.1", title:"The complete equipment list (with costs)", html:`
+<h1>Outfit a pro operation for $150–$300</h1><a class="dl-btn" href="downloads/04_Equipment-Shopping-List.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: Equipment Shopping List<small>Printable PDF workbook · yours to keep</small></span></a>
+<h3>Specimen transport — the core kit</h3>
+<ul>
+<li><strong>Hard coolers, 2 sizes</strong> (small 9–16qt, medium 28–48qt): $40–$80. Upgrade to medical-grade when a contract requires validated containers.</li>
+<li><strong>Gel packs, 6–10</strong>: $20–$30 (rotate half frozen, half in use)</li>
+<li><strong>Ambient/room-temp tote</strong> with lid: $15</li>
+<li><strong>Biohazard specimen bags</strong>, box of 100: $10–$15</li>
+<li><strong>Absorbent pads</strong> (secondary containment): $10–$20</li>
+<li><strong>Digital min/max thermometer or data logger</strong>: $10–$40. Cold-chain contracts require temp docs — a $25 logger qualifies you for work others can't take.</li>
+<li><strong>Insulated gloves</strong> for dry ice: $10</li>
+</ul>
+<h3>Safety &amp; compliance</h3>
+<ul><li>Biohazard spill kit: $20–$30 (required by most lab contracts)</li><li>Nitrile gloves: $10 · Sanitizer + disinfectant wipes: $10</li><li>Safety vest (some docks require): $10 · First-aid kit: $10</li></ul>
+<h3>Professional kit</h3>
+<ul><li>Clipboard/tablet for chain-of-custody docs</li><li>Phone mount + charger: $20</li><li>ID badge with name, company, photo: ~$10 — hospitals take you seriously, security stops you less</li><li>Magnetic vehicle signs (~$30/pair) — but some clients prefer unmarked vehicles; ask first</li></ul>
+<h3>Vehicle requirements clients check</h3>
+<ul><li>Clean inside and out — a lab manager WILL look in your back seat</li><li>Working A/C (summer specimen integrity is non-negotiable)</li><li>No smoking, ever — smell has lost couriers contracts</li><li>Cargo organizer so coolers don't slide: $20</li></ul>
+<div class="callout"><span class="ctag">Action step</span><p>Order the core kit this week — target under $250. Photograph your clean setup (coolers, spill kit, thermometer visible). Those photos go on your site and in pitch emails as proof you're a professional.</p></div>` },
+    { n:"3.2", title:"Vehicle selection, maintenance & cost per mile", html:`
+<h1>You don't need a van to start</h1>
+<p>A reliable sedan, hatchback, or small SUV handles 95% of the work. What matters:</p>
+<ul>
+<li><strong>Reliability over image.</strong> A 2014 Camry that never breaks beats a financed 2024 SUV that eats your margin. A missed route day costs you twice — lost revenue + damaged reputation.</li>
+<li><strong>Fuel economy is profit.</strong> At 25K–40K business miles/yr, 22 vs 38 MPG is $1,500–$3,000/yr off your bottom line. Hybrids are the unofficial courier vehicle.</li>
+<li><strong>Age rules:</strong> some networks require vehicles under 10–15 years old. Check before buying.</li>
+</ul>
+<h3>Maintenance discipline</h3>
+<ul><li>Oil changes ON schedule — you'll hit intervals monthly</li><li>Tires: check monthly; courier mileage burns a set in 12–18 months</li><li>Brakes, battery, belts every oil change — a mid-route breakdown with specimens is an emergency</li><li>Keep a maintenance log — tax record + proof of professionalism for bids</li></ul>
+<h3>Know your true cost per mile</h3>
+<ul><li>Fuel: $/gallon ÷ your MPG</li><li>Maintenance + tires: ~$0.06–$0.10/mile</li><li>Depreciation: ~$0.10–$0.20/mile</li></ul>
+<div class="callout"><span class="ctag">Your number</span><p>Typical all-in: <strong>$0.30–$0.50/mile.</strong> Any work below your cost per mile + your time is a NO. Write your number on a sticky note on your dash.</p></div>
+<p><strong>Backup plan:</strong> line up a rental (Turo, local agency) or a friend's vehicle BEFORE you need it. One day of downtime with no backup can cost a routed contract.</p>` },
+    { n:"3.3", title:"Specimen handling: the skills behind premium rates", html:`
+<h1>The technical heart of the job</h1><a class="dl-btn" href="downloads/06_Chain-of-Custody-Log.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: Daily Chain-of-Custody Log<small>Printable PDF workbook · yours to keep</small></span></a>
+<h3>Three temperature categories — get these wrong and the test fails</h3>
+<ol>
+<li><strong>Ambient/room temp</strong> (many chemistry specimens): insulated container, NO cold packs. "Ambient" = 15–25°C, not "whatever the trunk is."</li>
+<li><strong>Refrigerated, 2–8°C</strong> (blood tubes, urine, many meds): cooler with gel packs. <strong>Never let specimens touch frozen gel packs directly</strong> — use a barrier. Direct contact can freeze and destroy a blood sample.</li>
+<li><strong>Frozen</strong> (certain plasma, tissue): dry ice, client-packed. Never let it thaw and refreeze.</li>
+</ol>
+<h3>Triple packaging (UN 3373, Category B)</h3>
+<ul><li>Primary: the sealed tube/cup</li><li>Secondary: leak-proof biohazard bag with absorbent</li><li>Outer: rigid container (your cooler)</li></ul>
+<p>If a clinic hands you a leaking or unsealed primary container, you're right to refuse it. Pros refuse bad handoffs; amateurs transport problems.</p>
+<h3>Chain of custody — the habit that wins contracts</h3>
+<ul><li>Log every pickup: time, location, count, condition, temp if required</li><li>Log every delivery: time, recipient signature</li><li>Keep YOUR OWN log even if the client has an app — when a specimen is questioned, the courier with documentation keeps the contract</li></ul>
+<div class="callout warn"><span class="ctag">Non-negotiable rules</span><p>Specimens ride in the climate-controlled cabin, never a hot trunk · coolers secured · no personal stops with specimens aboard · vehicle locked at every stop (unlocked car with PHI = reportable HIPAA incident) · spill protocol: isolate, PPE, spill kit, notify client. Reporting a problem builds trust; hiding one ends careers.</p></div>` },
+  ]},
+  { t:"Getting Work — Relationships & Contracts", lessons:[
+    { n:"4.1", title:"The contract company directory — earn in 2–4 weeks", isNew:true, html:`
+<h1>Your fastest path to the first dollar</h1>
+<p>National networks hold contracts with labs and hospitals and need independent (1099) drivers. Apply to ALL that serve your area — multiple income streams is the model.</p>
+<h3>National networks onboarding independent couriers</h3>
+<ul>
+<li><a href="https://www.dropoff.com" target="_blank">Dropoff</a> — same-day medical delivery; driver app w/ tracking</li>
+<li><a href="https://gouspack.com/contractors/" target="_blank">USPack / USPack Healthcare</a> — routed + on-demand; 25,000+ medical deliveries weekly</li>
+<li><a href="https://www.lablogistics.com/drive-for-us" target="_blank">Lab Logistics</a> — lab specimen routes specifically</li>
+<li><a href="https://americanexpediting.com" target="_blank">American Expediting</a> — major medical/STAT network</li>
+<li><a href="https://careers.labcorp.com" target="_blank">Labcorp</a> — search "courier" (W-2 routes, good for experience/credibility)</li>
+<li><a href="https://allmedexpress.net/medical-courier-contractor-opportunities/" target="_blank">All-Med Express</a></li>
+<li><a href="https://www.diligentusa.com" target="_blank">Diligent Delivery Systems</a></li>
+<li><a href="https://biotouchglobaljobs.com" target="_blank">BioTouch Global</a></li>
+<li><a href="https://www.tforcefinalmile.com" target="_blank">TForce Final Mile</a></li>
+<li><a href="https://www.senpex.com" target="_blank">Senpex</a></li>
+<li><a href="https://www.prioritydispatch.com" target="_blank">Priority Dispatch</a></li>
+<li><a href="https://www.labexp.com" target="_blank">LabExpress</a> (Midwest)</li>
+<li>Ameriship Parcel Delivery — TX, OK, AZ, MO, KS, FL, CO, GA, IL</li>
+<li><a href="https://couriergigs.com" target="_blank">CourierGigs</a> — courier contract job board</li>
+<li><a href="https://www.a4dd.org" target="_blank">A4DD job board</a> — membership includes listings + training discounts</li>
+</ul>
+<p>Also search "[your metro] medical courier" — regional players often pay better and promote reliable drivers faster.</p>
+<h3>How onboarding works</h3>
+<ol><li>Online application: license, insurance, vehicle</li><li>Background check + MVR pull, often a drug screen</li><li>Proof of certs (HIPAA/BBP — you'll have them from Module 2)</li><li>Certificate of Insurance from your insurer</li><li>Orientation/app training, then route assignment</li></ol>
+<div class="callout"><span class="ctag">Reality check</span><p>Timeline: 1–4 weeks. Apply to 5+ companies in week one — onboarding runs in parallel. Expect ~$0.80–$1.50/mile or $15–$30/stop. Decent cash flow that funds your direct-contract push, which pays 1.5–3x more.</p></div>` },
+    { n:"4.2", title:"Landing direct contracts: list + exact scripts", html:`
+<h1>Direct contracts are the real business</h1><a class="dl-btn" href="downloads/03_Cold-Call-Script-and-Email.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: Cold Call Script + Email Template<small>Printable PDF workbook · yours to keep</small></span></a>
+<h3>Step 1 — Build a 50-prospect list (one evening)</h3>
+<p>Google Maps your service area, export to a sheet:</p>
+<ul><li>Independent &amp; regional labs (they decide locally and fast)</li><li>Urgent care, dialysis, surgery centers</li><li>Independent + long-term-care pharmacies</li><li>Dental labs (crowns/impressions move daily — almost no competition)</li><li>Vet clinics → vet diagnostic labs (overlooked)</li><li>Imaging centers, PT networks, home health agencies</li></ul>
+<h3>Step 2 — Find the decision-maker</h3>
+<p>Lab manager, practice manager, pharmacy manager. Call reception: "Quick question — who manages your specimen pickups/deliveries?" That name goes in your sheet.</p>
+<h3>Step 3 — The outreach sequence (call → email → in-person)</h3>
+<div class="script"><span class="stag">Cold call (30 seconds, then listen)</span>"Hi <em>[Name]</em>, this is <em>[You]</em> with <em>[Company]</em> — we're a local HIPAA- and OSHA-certified medical courier here in <em>[area]</em>. I'm not calling to replace anything that's working — I just want to be your backup when your current courier runs late or no-shows. Can I email you our insurance certificate and rates so you have us on file?"</div>
+<p><strong>Why it works:</strong> every lab manager has been burned. "Backup" is a no-pressure yes. Backups become primaries the first time you save them.</p>
+<div class="script"><span class="stag">Follow-up email</span><strong>Subject:</strong> Backup medical courier on file — <em>[Your Company]</em><br><br>Hi <em>[Name]</em>, as promised:<br>• HIPAA + OSHA BBP certified (certificates attached)<br>• $1M general liability — COI attached, happy to name <em>[Facility]</em> as certificate holder<br>• Temperature-controlled transport with documented cold chain<br>• Live phone answer, <em>[your hours]</em><br>Rates: STAT from $<em>[X]</em>; scheduled routes quoted flat monthly.<br>If your regular service ever leaves you stuck, call/text me directly: <em>[cell]</em>.<br>— <em>[Name, Company, phone, website]</em></div>
+<p><strong>In-person drop-by (top 10 prospects):</strong> clean clothes, badge, a folder with COI + certs + a one-page rate sheet. 60 seconds: "Just putting a face to the name — we're the backup courier I emailed about." Leave the folder. Faces beat emails.</p>
+<div class="callout"><span class="ctag">The cadence</span><p>10 calls/week = 40/month. Expect ~1 contract per 20–40 quality contacts. Two routed contracts can be a full-time income. This is a 90-day game of professional persistence.</p></div>` },
+    { n:"4.3", title:"Pricing: quote to win AND make money", isNew:true, html:`
+<h1>Underpricing is the #2 killer after bad insurance</h1><a class="dl-btn" href="downloads/05_Service-Agreement-Template.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: Service Agreement Template<small>Printable PDF workbook · yours to keep</small></span></a>
+<h3>Model 1 — Per-stop / per-route (scheduled)</h3>
+<ul><li>Quote routes as a flat monthly rate (stops × rate × route days) — clients love predictable costs</li><li>Per-stop benchmarks: $10–$25; route days commonly $100–$200/day for the courier</li><li>Define the route in writing: stops, windows, and what an "extra stop" costs ($10–$20)</li></ul>
+<h3>Model 2 — Per-mile + base (on-demand)</h3>
+<ul><li>Base $25–$45 + $1.50–$2.50/mile is common</li><li>Floor: never below your cost per mile × 2</li></ul>
+<h3>Model 3 — STAT premium</h3>
+<ul><li>STAT/urgent = 1.5–2x standard. After-hours/weekend = +25–50%</li><li>Don't apologize — you're the solution to their emergency, and the lab bills far more than your fee</li></ul>
+<p><strong>Cold-chain premium:</strong> documented temp-controlled runs justify 20–40% above standard. Your $25 logger earns its keep here.</p>
+<h3>Quoting rules</h3>
+<ul><li>Never quote routes on the spot — "Let me map it and send a flat monthly number tomorrow"</li><li>Put everything in a one-page agreement: scope, rates, payment terms (Net 15/30 — expect a 2–4 week lag, plan cash flow), insurance, term, 30-day out</li><li>Annual rate-review clause — fuel and insurance rise, so should your contracts</li><li>Invoicing: Wave (free) or QuickBooks Self-Employed (~$20/mo, also tracks mileage)</li></ul>` },
+    { n:"4.4", title:"Service standards that make you irreplaceable", html:`
+<h1>Communication IS the product</h1>
+<p>Labs don't leave good couriers over price; they leave silent ones.</p>
+<h3>The standards (adopt all)</h3>
+<ul>
+<li>Answer the phone, or return calls within 15 minutes during service hours — put this promise in your pitch</li>
+<li>Proactive delay alerts: "Running 15 behind due to an accident on [route], ETA 4:45" — that text builds more trust than 50 on-time runs</li>
+<li>Completion texts for STAT: "Delivered to [Lab], received by [Name], 3:42 PM"</li>
+<li>Same-day email response</li>
+<li>Professional appearance every run — receptionists report on couriers, lab techs have veto power over renewals</li>
+</ul>
+<h3>Handling problems like a pro</h3>
+<ul>
+<li><strong>Mistakes:</strong> own it → fix it → state what changes. "The 2 PM pickup was missed — that's on me. En route now, there by 2:40, added a route alarm so it can't repeat." Clients forgive errors; they fire excuse-makers.</li>
+<li><strong>Unsafe handoffs:</strong> "I can't transport an unsealed container under my compliance requirements — once it's re-bagged I'm happy to run it." This raises your standing.</li>
+<li><strong>Angry client:</strong> listen fully, restate the issue, give a concrete fix + timeline, follow up in writing.</li>
+</ul>
+<div class="callout"><span class="ctag">The compounding effect</span><p>Healthcare is a village. Lab managers move between facilities and bring their courier. Techs recommend you across town. Every interaction is free marketing — or damage you can't undo.</p></div>` },
+  ]},
+  { t:"Safety & Compliance", lessons:[
+    { n:"5.1", title:"HIPAA for couriers: what it actually requires", html:`
+<h1>HIPAA, in daily behaviors</h1>
+<p>Violations carry fines into six figures, and one incident can void every contract.</p>
+<h3>Your legal status</h3>
+<p>You're a <strong>Business Associate</strong>. Clients will have you sign a <strong>Business Associate Agreement (BAA)</strong> making you legally responsible for protecting PHI. Signing one is normal — read it, keep a copy.</p>
+<h3>What counts as PHI in your vehicle</h3>
+<p>Specimen labels (name + DOB + test), requisition forms, medical records, prescription labels, even your delivery manifest.</p>
+<h3>The daily rules</h3>
+<ul>
+<li>Documents and labeled specimens stay out of public view — covered containers, never loose paper on the seat</li>
+<li>Vehicle locked at every stop, zero exceptions</li>
+<li>Never photograph specimens/labels/paperwork — couriers have been fired for "day in the life" content showing labels</li>
+<li>Never discuss patient details — not with your spouse, not in a waiting room</li>
+<li>Deliver to authorized personnel or a designated secure drop only — never "left at the front desk" unattended</li>
+<li>Phone: lock screen on; if a client app holds PHI, passcode it and don't share that phone</li>
+<li>Misdelivery or loss = report to the client immediately. A reported incident is a problem; a concealed one is a breach plus a coverup.</li>
+</ul>
+<div class="callout"><span class="ctag">One-time setup</span><p>Write a one-page privacy practices memo (how you secure documents, vehicle, phone; your incident steps). It satisfies most BAAs and is a powerful artifact in contract bids — almost no solo courier has one.</p></div>` },
+    { n:"5.2", title:"Safe transport: BBP, exposure & cold chain", html:`
+<h1>The operational layer</h1>
+<p>Your annual OSHA BBP cert covers the science; here's the field practice.</p>
+<h3>Exposure prevention</h3>
+<ul><li>Gloves when handling specimen bags; sanitize after every stop</li><li>Universal precautions — treat every specimen as infectious</li><li>Hepatitis B vaccination — strongly consider the series (often free/cheap at health departments)</li></ul>
+<h3>If exposure happens (sharps injury, splash to broken skin/eyes/mouth)</h3>
+<ol><li>Wash/flush the site immediately and thoroughly</li><li>Note the source specimen details</li><li>Seek medical evaluation the SAME DAY — some treatments are time-critical</li><li>Notify the client; document everything</li></ol>
+<h3>Spill response</h3>
+<ol><li>Isolate; PPE on before touching anything</li><li>Cover with absorbent, apply disinfectant, allow contact time</li><li>Bag waste as biohazard — the lab directs disposal, never your home trash</li><li>Notify the client; document time, location, response</li></ol>
+<h3>Cold-chain discipline (your premium skill)</h3>
+<ul><li>Pre-chill coolers; verify with your thermometer</li><li>Log temps at pickup and delivery when required (pharmacy almost always)</li><li>Summer: never leave specimens in a parked car beyond minutes</li><li>Temp excursion: report it — a flagged specimen can be evaluated; a silently compromised one harms a patient</li></ul>
+<div class="callout"><span class="ctag">Breakdown with cargo aboard</span><p>Client call FIRST ("specimens secured, here's my location, ETA for backup"), then solve the vehicle. Your backup-vehicle plan is what makes that call calm instead of catastrophic.</p></div>` },
+    { n:"5.3", title:"Driving safety, records & audit-readiness", html:`
+<h1>Your driving record is your business license</h1>
+<p>Most contracts re-check MVRs annually; points can end contracts even without an accident.</p>
+<ul><li>No phone handling while driving — mounts + voice only</li><li>Build buffer time; speeding to make a window risks the whole business to save 4 minutes. Chronically rushing = the route is mispriced or overbooked. Fix the route.</li><li>Weather: clients respect "I need 30 extra minutes to do this safely."</li></ul>
+<h3>The records system that makes you audit-proof</h3>
+<p>One folder, digital + paper:</p>
+<ul>
+<li>Certifications + renewal dates (BBP is ANNUAL — calendar it)</li>
+<li>Insurance policies + current COIs</li>
+<li>Signed BAAs and service agreements</li>
+<li>Daily run logs / chain-of-custody (keep 6+ years)</li>
+<li>Vehicle maintenance log</li>
+<li>Incident reports — including near-misses</li>
+<li>Mileage log + invoices/payments</li>
+</ul>
+<div class="callout"><span class="ctag">Quarterly habit</span><p>A 30-minute compliance review: anything expiring? Incident patterns? This alone puts you in the top 5% of independent couriers — when a hospital vendor audit asks for documentation, you produce it in minutes while competitors scramble.</p></div>` },
+  ]},
+  { t:"Growing Your Business", lessons:[
+    { n:"6.1", title:"Expanding services & diversifying revenue", html:`
+<h1>Grow deliberately</h1>
+<p>Once one routed contract runs smoothly:</p>
+<h3>Add adjacent service lines (same kit, new revenue)</h3>
+<ul>
+<li><strong>Specialty pharmacy / cold-chain meds</strong> — fastest-growing (GLP-1s, biologics, home infusion); your documented cold-chain process qualifies you</li>
+<li><strong>Long-term-care pharmacy routes</strong> — high-volume, recurring, evening-friendly</li>
+<li><strong>Dental &amp; veterinary lab routes</strong> — low competition, normal hours</li>
+<li><strong>Medical records / legal copy</strong> — law firms pay courier rates for HIPAA-trained transport</li>
+<li><strong>After-hours / weekend STAT</strong> — many markets have no reliable after-hours courier; owning nights/weekends is a moat</li>
+</ul>
+<h3>Diversification rules</h3>
+<ul><li>No single client over ~40% of revenue past month 6</li><li>Mix routed (stability) with STAT (margin)</li><li>Raise rates on anniversary dates — reliable incumbents rarely get shopped over a 5–8% increase</li></ul>
+<div class="callout"><span class="ctag">When to say no</span><p>Work below your cost-per-mile floor, clients who pay late twice, cargo outside your training/insurance, and route stacking so tight one delay cascades. Growth that breaks your service standard is shrinkage in disguise.</p></div>` },
+    { n:"6.2", title:"Technology: the stack that runs the business", html:`
+<h1>Keep it lean — under $50/month</h1>
+<ul>
+<li><strong>Route optimization:</strong> Google Maps free for ~6 stops. Past ~10/day, Circuit (~$20/mo), Upper, or Routific pay for themselves in fuel/time</li>
+<li><strong>Proof of delivery:</strong> many clients provide their own app (Dropoff Tracker, network systems). For your direct contracts, Circuit captures signatures/photos; minimum = timestamped photo + shared log</li>
+<li><strong>Mileage tracking (non-negotiable):</strong> Everlance, MileIQ, or QuickBooks Self-Employed auto-tracking</li>
+<li><strong>Invoicing/books:</strong> Wave (free) or QuickBooks Self-Employed (~$20/mo)</li>
+<li><strong>Temperature logging:</strong> $25–$40 Bluetooth loggers export PDF reports — attach one to a pharmacy bid and watch the reaction</li>
+<li><strong>Communication:</strong> a Google Voice business number (free) keeps your cell private and lets you add drivers later</li>
+<li><strong>Document storage:</strong> a Google Drive folder mirroring your records system; share COIs/certs via link</li>
+</ul>
+<div class="callout"><span class="ctag">Not yet</span><p>Fleet telematics, custom apps, dispatch software — those enter the picture at 3+ drivers.</p></div>` },
+    { n:"6.3", title:"Scaling: from solo driver to courier company", html:`
+<h1>Earn from routes you don't drive</h1>
+<p>The solo ceiling is ~$4–6K/month gross — your hours cap it. Scaling breaks that cap.</p>
+<h3>The progression</h3>
+<ol>
+<li><strong>Overflow partner (month 3–6):</strong> one reliable courier for mutual backup. Solves your vacation/sick-day problem, tests delegation.</li>
+<li><strong>First subcontractor (when turning down work):</strong> 1099 model — you keep 20–40% of route revenue, they drive. Worker-classification rules are state-specific and enforced — get an hour of legal/accounting advice before your first hire. Require their own commercial auto insurance + certs, and verify.</li>
+<li><strong>Driver quality system:</strong> you're selling YOUR reputation through other hands. Written route procedures (your Module 3 + 5 standards), first-week ride-alongs, monthly client spot-checks.</li>
+<li><strong>Sell routes, not hours:</strong> at 3+ drivers your job is sales + quality. Every routed contract is an asset — clean, documented courier businesses sell for meaningful multiples on exit. You're building something sellable.</li>
+</ol>
+<div class="callout warn"><span class="ctag">Scaling traps</span><p>Hiring before route revenue supports it · skipping insurance/cert verification on subs (their gap is YOUR liability) · growing past your phone — when you can't answer clients in 15 minutes, the standard that built the business dies. Hire dispatch help before that point, not after.</p></div>` },
+  ]},
+  { t:"Conclusion", lessons:[
+    { n:"7.1", title:"Your 30-day launch plan + sustainability", html:`
+<h1>30 days from idea to income</h1><a class="dl-btn" href="downloads/01_30-Day-Launch-Checklist.pdf" download><span class="dlic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span>Download: 30-Day Launch Checklist<small>Printable PDF workbook · yours to keep</small></span></a>
+<h3>Week 1 — Legal foundation</h3>
+<div class="checkitem"><span class="cb"></span><span>File LLC with your Secretary of State ($40–$200)</span></div>
+<div class="checkitem"><span class="cb"></span><span>Get EIN free at IRS.gov (10 min)</span></div>
+<div class="checkitem"><span class="cb"></span><span>Order certifications: HIPAA + BBP + specimen handling — start immediately</span></div>
+<div class="checkitem"><span class="cb"></span><span>Request commercial auto + general liability quotes (3 minimum)</span></div>
+<h3>Week 2 — Compliance + kit</h3>
+<div class="checkitem"><span class="cb"></span><span>Finish certifications; save to your Drive folder</span></div>
+<div class="checkitem"><span class="cb"></span><span>Bind insurance; request a COI</span></div>
+<div class="checkitem"><span class="cb"></span><span>Open business bank account</span></div>
+<div class="checkitem"><span class="cb"></span><span>Order equipment kit (~$250); photograph your setup</span></div>
+<div class="checkitem"><span class="cb"></span><span>Google Business Profile + one-page site live</span></div>
+<h3>Week 3 — Pipeline</h3>
+<div class="checkitem"><span class="cb"></span><span>Apply to 5+ courier networks from the directory</span></div>
+<div class="checkitem"><span class="cb"></span><span>Build your 50-prospect direct-contract list</span></div>
+<div class="checkitem"><span class="cb"></span><span>Write your rate sheet</span></div>
+<div class="checkitem"><span class="cb"></span><span>First 10 cold calls (backup positioning)</span></div>
+<h3>Week 4 — Revenue</h3>
+<div class="checkitem"><span class="cb"></span><span>Complete network onboardings; accept first routes</span></div>
+<div class="checkitem"><span class="cb"></span><span>10 more calls + follow-up emails + 3 in-person drop-bys</span></div>
+<div class="checkitem"><span class="cb"></span><span>Set your quarterly compliance review reminder</span></div>
+<div class="checkitem"><span class="cb"></span><span>Start the mileage tracker before your first paid mile</span></div>
+<h3>The 12-month picture</h3>
+<ul><li>Months 1–3: subcontract routes cover fixed costs + profit; direct pipeline warming</li><li>Months 4–6: first direct contract (2–3x subcontract margins); backup partner in place</li><li>Months 7–12: 2–3 direct contracts, proven rates, decision point — comfortable solo income or first subcontractor</li></ul>
+<div class="callout"><span class="ctag">Sustainability = three disciplines</span><p>Never let a certification or policy lapse · never let one client exceed 40% of revenue · never let growth break the 15-minute-callback standard. Couriers fail from sloppiness, not competition — the industry has plenty of demand and a shortage of professionals.</p></div>
+<p>You now have everything: the legal steps, the certifications and where to buy them, the insurance specifics, the equipment list, the company directory, the scripts, the pricing models, and the compliance systems. The only ingredient this course can't supply is 30 days of execution. <strong>Start Week 1 today.</strong></p>
+<div class="callout warn"><span class="ctag">Disclaimer</span><p>Regulations, prices, and company programs change. Verify current requirements with your state, your insurer, and each client. This course is education — not legal, tax, or insurance advice.</p></div>` },
+  ]},
+];
+
+/* ============ FLATTEN + STATE ============ */
+const FLAT=[];
+MODULES.forEach((m,mi)=>m.lessons.forEach((l,li)=>FLAT.push({...l,mod:m.t,mi,li})));
+let current=0;
+/* ---- saved progress (persists on your live site; safe no-op in preview) ---- */
+const STORE_KEY='mcp_progress_v1';
+let done=new Set();
+function loadProgress(){
+  try{const raw=localStorage.getItem(STORE_KEY);if(raw)done=new Set(JSON.parse(raw));}catch(e){}
+}
+function saveProgress(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify([...done]));}catch(e){}
+}
+loadProgress();
+
+/* ============ BUILD LANDING CURRICULUM ============ */
+function buildCurriculum(){
+  const el=document.getElementById('currList');
+  el.innerHTML=MODULES.map((m,i)=>`
+    <div class="mod" data-i="${i}">
+      <button class="mod-head" onclick="toggleMod(${i})">
+        <span class="mod-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="mod-meta"><h4>${m.t}</h4><span class="c">${m.lessons.length} lesson${m.lessons.length>1?'s':''}</span></span>
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="mod-body">
+        ${m.lessons.map((l,li)=>`<div class="lec ${l.isNew?'new':''}" onclick="openCourse(${FLAT.findIndex(f=>f.mi===i&&f.li===li)})"><span class="ld">${CK}</span><span>${l.n} · ${l.title}</span></div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function toggleMod(i){
+  const m=document.querySelector(`.mod[data-i="${i}"]`);
+  const open=m.classList.contains('open');
+  document.querySelectorAll('.mod').forEach(x=>{x.classList.remove('open');x.querySelector('.mod-body').style.maxHeight=null;});
+  if(!open){m.classList.add('open');const b=m.querySelector('.mod-body');b.style.maxHeight=b.scrollHeight+'px';}
+}
+
+/* ============ BUILD PLAYER ROUTE ============ */
+function buildRoute(){
+  const el=document.getElementById('pRoute');
+  el.innerHTML=MODULES.map((m,mi)=>`
+    <div class="p-mod">
+      <div class="p-mod-t">${String(mi+1).padStart(2,'0')} · ${m.t}</div>
+      ${m.lessons.map((l,li)=>{const idx=FLAT.findIndex(f=>f.mi===mi&&f.li===li);return`
+        <button class="p-lec" data-idx="${idx}" onclick="openLesson(${idx})">
+          <span class="stopdot">${CK}</span>
+          <span class="lectxt"><span class="lecnum">${l.n}</span>${l.title}</span>
+        </button>`;}).join('')}
+    </div>`).join('');
+}
+
+/* ============ NAVIGATION ============ */
+function openCourse(idx){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('player').classList.add('active');
+  document.getElementById('menuBtn').style.display='';
+  window.scrollTo(0,0);
+  openLesson(idx);
+}
+function closeCourse(){
+  document.getElementById('player').classList.remove('active');
+  document.getElementById('landing').style.display='';
+  document.getElementById('menuBtn').style.display='none';
+  window.scrollTo(0,0);
+}
+function openLesson(idx){
+  current=idx;
+  const l=FLAT[idx];
+  document.getElementById('lessonEyebrow').textContent=`Module ${l.mi+1} · ${l.mod} — Lesson ${l.n}`;
+  document.getElementById('lessonBody').innerHTML=l.html;
+  document.getElementById('prevBtn').disabled=idx===0;
+  document.getElementById('nextBtn').disabled=idx===FLAT.length-1;
+  document.querySelectorAll('.p-lec').forEach(b=>b.classList.toggle('active',+b.dataset.idx===idx));
+  updateComplete();
+  document.querySelector('.p-main').scrollTo(0,0);
+  window.scrollTo(0,0);
+  if(window.innerWidth<=920){document.getElementById('pSide').classList.remove('open');}
+}
+function go(d){const n=current+d;if(n>=0&&n<FLAT.length)openLesson(n);}
+function toggleComplete(){
+  if(done.has(current))done.delete(current);else done.add(current);
+  saveProgress();
+  updateComplete();updateProgress();
+}
+function updateComplete(){
+  const btn=document.getElementById('completeBtn');
+  const isDone=done.has(current);
+  btn.classList.toggle('is-done',isDone);
+  btn.innerHTML=isDone?`${CK} Completed`:`Mark complete`;
+}
+function updateProgress(){
+  const pct=Math.round(done.size/FLAT.length*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progTxt').textContent=`${pct}% complete · ${done.size}/${FLAT.length} lessons`;
+  document.querySelectorAll('.p-lec').forEach(b=>b.classList.toggle('done',done.has(+b.dataset.idx)));
+}
+function toggleSide(){document.getElementById('pSide').classList.toggle('open');}
+
+/* init */
+buildCurriculum();buildRoute();toggleMod(0);
+document.querySelector('.mod[data-i="0"] .mod-body').style.maxHeight=
+  document.querySelector('.mod[data-i="0"] .mod-body').scrollHeight+'px';
+updateProgress();
+</script>
+</body>
+</html>
