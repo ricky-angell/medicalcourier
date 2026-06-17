@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Courier Pro | ANGELL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;
+  --paper:#FFFFFF;
+  --ink:#192A2D;
+  --ink-soft:#4A5F62;
+  --teal:#1A5C6B;
+  --teal-deep:#0F3A44;
+  --gold:#C4974A;
+  --gold-soft:#E8D2A4;
+  --line:rgba(26,92,107,.14);
+  --shadow-lg:0 2px 4px rgba(15,58,68,.08),0 18px 50px rgba(15,58,68,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body.locked{overflow:hidden}
+#course-frame{
+  width:100%;
+  height:100vh;
+  border:0;
+  display:none;
+  background:var(--cream);
+}
+body.unlocked #course-frame{display:block}
+#gate-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:
+    radial-gradient(900px 500px at 88% -10%,rgba(196,151,74,.22),transparent 60%),
+    radial-gradient(700px 500px at 0% 110%,rgba(26,92,107,.22),transparent 55%),
+    linear-gradient(180deg, rgba(250,247,242,.96), rgba(232,210,164,.2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+body.unlocked #gate-overlay{display:none}
+.gate-panel{
+  width:100%;
+  max-width:460px;
+  background:linear-gradient(160deg,#fff,#FAF7F2);
+  border:1px solid rgba(26,92,107,.22);
+  border-radius:24px;
+  padding:42px 32px 34px;
+  text-align:center;
+  box-shadow:var(--shadow-lg);
+}
+.gate-badge{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  margin:0 auto 18px;
+  background:var(--teal-deep);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold-soft);
+  box-shadow:0 12px 34px rgba(15,58,68,.22);
+}
+.gate-badge svg{width:40px;height:40px}
+.gate-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--teal);
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:600;
+  margin-bottom:10px;
+}
+.gate-title{
+  font-family:'Bricolage Grotesque',sans-serif;
+  color:var(--ink);
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.gate-desc{
+  color:var(--ink-soft);
+  font-size:.96rem;
+  line-height:1.55;
+  margin-bottom:22px;
+}
+.gate-input{
+  width:100%;
+  padding:15px 16px;
+  border-radius:12px;
+  border:1px solid rgba(26,92,107,.28);
+  background:#fff;
+  color:var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.98rem;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  outline:none;
+  margin-bottom:14px;
+}
+.gate-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 4px rgba(196,151,74,.16);
+}
+.gate-btn{
+  width:100%;
+  padding:15px 16px;
+  border-radius:12px;
+  border:none;
+  background:var(--gold);
+  color:var(--teal-deep);
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(196,151,74,.28);
+  transition:.18s;
+}
+.gate-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 26px rgba(196,151,74,.38);
+}
+.gate-error{
+  min-height:20px;
+  margin-top:12px;
+  color:#b84a28;
+  font-size:.85rem;
+}
+.gate-foot{
+  margin-top:18px;
+  color:var(--ink-soft);
+  font-size:.78rem;
+}
+@keyframes gateShake{
+  10%,90%{transform:translateX(-1px)}
+  20%,80%{transform:translateX(2px)}
+  30%,50%,70%{transform:translateX(-4px)}
+  40%,60%{transform:translateX(4px)}
+}
+.gate-panel.shake{animation:gateShake .45s}
+</style>
+</head>
+<body class="locked">
+
+<div id="gate-overlay">
+  <div class="gate-panel" id="gate-panel">
+    <div class="gate-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E8D2A4" stroke-width="2" stroke-linecap="round">
+        <path d="M3 12h4l2-3 3 6 2-3h4"/>
+        <circle cx="12" cy="12" r="9"/>
+      </svg>
+    </div>
+    <div class="gate-eyebrow">Angell Real Estate Academy</div>
+    <div class="gate-title">Medical Courier Pro</div>
+    <p class="gate-desc">
+      This course is locked to enrolled students. Enter the access code from your confirmation page to begin.
+    </p>
+    <input type="text" id="gate-input" class="gate-input" placeholder="ACCESS CODE" autocomplete="off">
+    <button class="gate-btn" id="gate-submit">Unlock Course</button>
+    <div class="gate-error" id="gate-error"></div>
+    <div class="gate-foot">Use the code shown on your access page after checkout.</div>
+  </div>
+</div>
+
+<iframe id="course-frame" title="Medical Courier Pro Course"></iframe>
+
+<script>
+(function(){
+  const CODE = 'ANGELL-COURIER-2026';
+  const STORAGE_KEY = 'courier_unlocked_2026';
+  const COURSE_FILE = 'index%20(1).html';
+
+  const input = document.getElementById('gate-input');
+  const btn = document.getElementById('gate-submit');
+  const err = document.getElementById('gate-error');
+  const panel = document.getElementById('gate-panel');
+  const frame = document.getElementById('course-frame');
+
+  function loadCourse(){
+    if(!frame.src){
+      frame.src = COURSE_FILE;
+    }
+    document.body.classList.remove('locked');
+    document.body.classList.add('unlocked');
+  }
+
+  function unlockCourse(){
+    const value = input.value.trim().toUpperCase();
+
+    if(value === CODE){
+      localStorage.setItem(STORAGE_KEY,'1');
+      err.textContent = '';
+      loadCourse();
+    } else {
+      err.textContent = "That code doesn't match. Check your access page and try again.";
+      panel.classList.remove('shake');
+      void panel.offsetWidth;
+      panel.classList.add('shake');
+    }
+  }
+
+  btn.addEventListener('click', unlockCourse);
+  input.addEventListener('keydown', function(event){
+    if(event.key === 'Enter') unlockCourse();
+  });
+
+  if(localStorage.getItem(STORAGE_KEY)==='1'){
+    loadCourse();
+  }
+})();
+</script>
+</body>
+</html>
